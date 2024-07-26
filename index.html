@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and Preview Your Ads</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group .checkbox-label {
+            display: flex;
+            align-items: center;
+        }
+        .form-group .checkbox-label input {
+            margin-right: 10px;
+        }
+        .form-group .dropdowns {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group .dropdowns select {
+            flex: 1;
+        }
+        .form-group button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .form-group .price-info {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .preview-container, .payment-container, .listing-container, .gallery-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+        .preview-container a, .payment-container a, .gallery-container a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .ad-container {
+            display: flex;
+            width: 728px;
+            height: 120px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .ad-container .ad-image {
+            width: 150px;
+            height: 110px;
+            overflow: hidden;
+            position: relative;
+        }
+        .ad-container .ad-image img {
+            width: 100%;
+            height: auto;
+        }
+        .ad-container .ad-content {
+            padding: 5px;
+            width: 555px;
+            height: 120px;
+            overflow: hidden;
+            position: relative;
+        }
+        .ad-container .ad-title {
+            margin: 0;
+            font-size: 16px;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .ad-container .ad-description {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .ad-container .ad-footer {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 12px;
+            color: #888;
+        }
+        .ad-display {
+            display: none;
+            text-align: center;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.9);
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+        .modal-content img {
+            width: 100%;
+            height: auto;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @keyframes zoom {
+            from {transform:scale(0)}
+            to {transform:scale(1)}
+        }
+        .animate {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Create and Preview Your Ads</h1>
+
+        <form id="ad-form">
+            <!-- Title -->
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter the title of your ad" required>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="antiques">Antiques</option>
+                    <option value="art">Art</option>
+                    <option value="books">Books</option>
+                    <option value="technology">Technology</option>
+                    <option value="memorabilia">Memorabilia</option>
+                </select>
+            </div>
+
+            <!-- Ad Type -->
+            <div class="form-group">
+                <label for="ad-type">Ad Type</label>
+                <select id="ad-type" name="ad-type">
+                    <option value="for-sale">For Sale</option>
+                    <option value="wants-ads">Wants Ads</option>
+                    <option value="free">Free</option>
+                </select>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" placeholder="Enter the price" step="0.01">
+            </div>
+
+            <!-- Dropdowns -->
+            <div class="form-group dropdowns">
+                <select name="dropdown1">
+                    <option value="">Dropdown 1</option>
+                    <!-- Add options here -->
+                </select>
+                <select name="dropdown2">
+                    <option value="">Dropdown 2</option>
+                    <!-- Add options here -->
+                </select>
+                <select name="dropdown3">
+                    <option value="">Dropdown 3</option>
+                    <!-- Add options here -->
+                </select>
+                <select name="dropdown4">
+                    <option value="">Dropdown 4</option>
+                    <!-- Add options here -->
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="10" placeholder="Enter the description of your ad" required></textarea>
+            </div>
+
+            <!-- Website URL -->
+            <div class="form-group">
+                <label for="website">Website URL</label>
+                <input type="url" id="website" name="website" placeholder="Enter your website URL">
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="image">Upload Image</label>
+                <div id="image-upload-container">
+                    <input type="file" id="image" name="image" accept="image/*" onchange="addImageUploadField()">
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="retype-email">Retype Email</label>
+                <input type="email" id="retype-email" name="retype-email" placeholder="Retype your email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <select id="city" name="city">
+                    <option value="city1">City 1</option>
+                    <option value="city2">City 2</option>
+                    <option value="city3">City 3</option>
+                </select>
+            </div>
+
+            <!-- Captcha -->
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="robot-check" name="robot-check">
+                    I'm not a robot
+                </label>
+            </div>
+
+            <!-- Preview Button -->
+            <div class="form-group">
+                <button type="button" id="preview-button">Preview Your Ad</button>
+            </div>
+        </form>
+
+        <!-- Preview Container -->
+        <div id="preview-container" class="preview-container">
+            <h2>Ad Preview</h2>
+            <div id="ads-container"></div>
+            <a href="#" id="back-button">Back to Form</a>
+            <button type="button" id="proceed-payment-button">Proceed to Payment</button>
+        </div>
+
+        <!-- Payment Container -->
+        <div id="payment-container" class="payment-container">
+            <h2>Payment Details</h2>
+            <div class="price-info">
+                <p>Listing Fee: $2.99</p>
+            </div>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" name="card-number" placeholder="Enter your card number" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-expiry">Expiry Date</label>
+                    <input type="text" id="card-expiry" name="card-expiry" placeholder="MM/YY" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-cvc">CVC</label>
+                    <input type="text" id="card-cvc" name="card-cvc" placeholder="CVC" required>
+                </div>
+                <button type="button" id="payment-button">Submit Payment</button>
+            </form>
+            <a href="#" id="payment-back-button">Back to Preview</a>
+            <a href="#" id="back-to-create-button">Back to Create and Preview Your Ad</a>
+        </div>
+
+        <!-- Listing Container -->
+        <div id="listing-container" class="listing-container">
+            <h2>Your Listing</h2>
+            <div id="final-ads-container"></div>
+        </div>
+
+        <!-- Gallery Container -->
+        <div id="gallery-container" class="gallery-container">
+            <h2>Photo Gallery</h2>
+            <div class="gallery" id="gallery"></div>
+            <a href="#" id="back-to-listings">Back to Listings</a>
+        </div>
+
+        <!-- Modal for full image -->
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+        </div>
+    </div>
+
+    <script>
+        let adCounter = 1;
+
+        document.getElementById('preview-button').addEventListener('click', function() {
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const adType = document.getElementById('ad-type').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value;
+            const website = document.getElementById('website').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const retypeEmail = document.getElementById('retype-email').value;
+            const phone = document.getElementById('phone').value;
+            const city = document.getElementById('city').value;
+            const imageFile = document.getElementById('image').files[0];
+            const isRobotChecked = document.getElementById('robot-check').checked;
+
+            if (title && category && adType && price && description && name && email && retypeEmail && phone && city && isRobotChecked) {
+                if (email !== retypeEmail) {
+                    alert('Emails do not match');
+                    return;
+                }
+                
+                const adContainer = document.createElement('div');
+                adContainer.classList.add('ad-container');
+                adContainer.innerHTML = `
+                    <div class="ad-image">
+                        ${imageFile ? `<img src="${URL.createObjectURL(imageFile)}" alt="${title}">` : ''}
+                    </div>
+                    <div class="ad-content">
+                        <h3 class="ad-title" data-images="${imageFile ? URL.createObjectURL(imageFile) : ''}">${title}</h3>
+                        <p class="ad-description">${description}</p>
+                        <div class="ad-footer">Category: ${category} | Type: ${adType} | Price: $${price}</div>
+                    </div>
+                `;
+                document.getElementById('ads-container').appendChild(adContainer);
+
+                document.getElementById('ad-form').style.display = 'none';
+                document.getElementById('preview-container').style.display = 'block';
+            } else {
+                alert('Please fill out all required fields and confirm that you are not a robot.');
+            }
+        });
+
+        document.getElementById('back-button').addEventListener('click', function() {
+            document.getElementById('preview-container').style.display = 'none';
+            document.getElementById('ad-form').style.display = 'block';
+        });
+
+        document.getElementById('proceed-payment-button').addEventListener('click', function() {
+            document.getElementById('preview-container').style.display = 'none';
+            document.getElementById('payment-container').style.display = 'block';
+        });
+
+        document.getElementById('payment-back-button').addEventListener('click', function() {
+            document.getElementById('payment-container').style.display = 'none';
+            document.getElementById('preview-container').style.display = 'block';
+        });
+
+        document.getElementById('back-to-create-button').addEventListener('click', function() {
+            document.getElementById('payment-container').style.display = 'none';
+            document.getElementById('ad-form').style.display = 'block';
+        });
+
+        document.getElementById('payment-button').addEventListener('click', function() {
+            const finalAdsContainer = document.getElementById('final-ads-container');
+            finalAdsContainer.innerHTML = document.getElementById('ads-container').innerHTML;
+
+            document.getElementById('payment-container').style.display = 'none';
+            document.getElementById('listing-container').style.display = 'block';
+        });
+
+        document.getElementById('final-ads-container').addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('ad-title')) {
+                const images = e.target.getAttribute('data-images').split(',');
+                const galleryContainer = document.getElementById('gallery');
+                galleryContainer.innerHTML = '';
+
+                images.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    galleryContainer.appendChild(img);
+                });
+
+                document.getElementById('listing-container').style.display = 'none';
+                document.getElementById('gallery-container').style.display = 'block';
+            }
+        });
+
+        document.getElementById('back-to-listings').addEventListener('click', function() {
+            document.getElementById('gallery-container').style.display = 'none';
+            document.getElementById('listing-container').style.display = 'block';
+        });
+
+        document.getElementById('gallery').addEventListener('click', function(e) {
+            if (e.target && e.target.tagName === 'IMG') {
+                const modal = document.getElementById('myModal');
+                const modalImg = document.getElementById('img01');
+                modal.style.display = 'block';
+                modalImg.src = e.target.src;
+            }
+        });
+
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('myModal').style.display = 'none';
+        });
+
+        function addImageUploadField() {
+            const container = document.getElementById('image-upload-container');
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.accept = 'image/*';
+            newInput.onchange = addImageUploadField;
+            container.appendChild(newInput);
+        }
+    </script>
+</body>
+</html>
+
